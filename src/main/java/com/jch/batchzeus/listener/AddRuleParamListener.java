@@ -60,6 +60,7 @@ public class AddRuleParamListener extends AnalysisEventListener<AddRuleParam> {
                 errorMsg = httpResult.getDesc();
             }
         } catch (Exception ex) {
+            errorMsg = ex.getMessage();
             LOGGER.error("新增规则异常:{}", data.getAlias(), ex);
         }
     }

@@ -64,6 +64,7 @@ public class AddParameterParamsListener extends AnalysisEventListener<AddParamet
                 errorMsg = httpResult.getDesc();
             }
         } catch (Exception ex) {
+            errorMsg = ex.getMessage();
             LOGGER.error("新增因子异常:{}", data.getName(), ex);
         }
     }

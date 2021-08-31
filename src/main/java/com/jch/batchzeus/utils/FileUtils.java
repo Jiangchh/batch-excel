@@ -1,6 +1,7 @@
 package com.jch.batchzeus.utils;
 
 import org.slf4j.Logger;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,14 +57,12 @@ public class FileUtils {
      * @param response
      * @param filePath
      */
-    public static void downloadExcel(HttpServletResponse response, String filePath) {
-        File file = new File(filePath);
-        String fileName = file.getName();
-        long fileLength = file.length();
+    public static void downloadExcel(HttpServletResponse response, String filePath)
+            throws Exception {
+        ClassPathResource classPathResource = new ClassPathResource(filePath);
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName);
-        response.setHeader("Content-Length", String.valueOf(fileLength));
-        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filePath));
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + classPathResource.getFilename());
+        try (BufferedInputStream bis = new BufferedInputStream(classPathResource.getInputStream());
              BufferedOutputStream bos = new BufferedOutputStream(
                      response.getOutputStream())) {
             byte[] buff = new byte[2048];
@@ -73,6 +72,7 @@ public class FileUtils {
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
+            throw e;
         }
     }
 

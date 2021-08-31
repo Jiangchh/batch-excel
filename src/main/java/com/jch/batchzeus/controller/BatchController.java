@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,9 +60,17 @@ public class BatchController {
     }
 
     @GetMapping("/download")
-    public void download(HttpServletResponse response, @RequestParam("type") String type) throws IOException {
-        String path = BatchController.class.getResource("/").getPath() + "file" + File.separator + type + ".xlsx";
-        FileUtils.downloadExcel(response, path);
+    @ResponseBody
+    public String download(HttpServletResponse response, @RequestParam("type") String type, Model model)
+            throws IOException {
+        try {
+            String filePath = "file" + File.separator + type + ".xlsx";
+            FileUtils.downloadExcel(response, filePath);
+            return "success";
+        } catch (Exception ex) {
+            model.addAttribute("reason", ex.getMessage());
+            return "error";
+        }
     }
 
     /**
